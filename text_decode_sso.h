@@ -1,5 +1,5 @@
-#ifndef TEXT_DECODE
-#define TEXT_DECODE
+#ifndef TEXT_DECODE_SSO_H
+#define TEXT_DECODE_SSO_H
 
 #include <stdio.h>
 #include <assert.h>
@@ -11,7 +11,7 @@ typedef enum {
     COPY_ARRAY  = 1
 } compression_mode_t; // TODO: rename, no print compression
 
-errors_t TextDecode(text_coder_t* coder);
+errors_t TextDecodeSSO(text_coder_t* coder);
 compression_mode_t DeterminePrintMode(int number, int *amount);
 
-#endif /* TEXT_DECODE */
+#endif /* TEXT_DECODE_SSO_H */

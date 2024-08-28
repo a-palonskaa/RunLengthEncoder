@@ -4,8 +4,9 @@
 #include <stdio.h>
 
 // TODO: rename
-const int MAX_LEN_SYMBOLS  = 127; // TODO: заменить название
+const int MAX_LEN_SYMBOLS_SSO  = 127; // TODO: заменить название
 const int MAX_LEN_NAME = 100;
+const int MAX_LEN_SYMBOLS_NO = 255; // TODO: заменить название
 
 // TODO: rename MODE
 // 0b0111'1111
@@ -31,7 +32,7 @@ typedef struct {
 typedef struct {
     FILE *file_input;
     FILE *file_output;
-    compression_stats_t* coder;
+    compression_stats_t stats;
 } text_coder_t;
 
 #endif /* DEFINE_CONSTANTS_H */

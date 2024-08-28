@@ -8,8 +8,10 @@
 
 // TODO: typedef
 typedef enum {
-    DECODE = 0,
-    ENCODE = 1
+    DECODE_NO = 0,
+    ENCODE_NO = 1,
+    DECODE_SSO = 2,
+    ENCODE_SSO = 3
 } operation_mode_t;
 
 typedef struct {

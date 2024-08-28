@@ -2,9 +2,11 @@
 #include <ctype.h>
 #include <string.h>
 
-#include "text_encode.h"
-#include "text_decode.h"
+#include "text_encode_sso.h"
+#include "text_decode_sso.h"
 #include "arg_parser.h"
+#include "text_decode_naive_implementation.h"
+#include "text_encode_naive_implementation.h"
 
 // TODO: where const
 int main(int argc, const char* argv[]) {
@@ -33,21 +35,27 @@ int main(int argc, const char* argv[]) {
         return FILE_OPEN_ERROR;
     }
 //text_encode_t* encoder
-    text_coder_t coder = {}
+    text_coder_t coder = {};
 
     coder.file_input  = file_input;
     coder.file_output = file_output;
 
-    if (flag.mode == DECODE) {
-        TextDecode(&coder);
+    if (flag.mode == DECODE_SSO) {
+        TextDecodeSSO(&coder);
     }
-    else if (flag.mode == ENCODE) {
-        TextEncode(&coder);
+    else if (flag.mode == ENCODE_SSO) {
+        TextEncodeSSO(&coder);
+    }
+    else if (flag.mode == ENCODE_NO) {
+        TextEncodeNaiveImplementation(&coder);
+    }
+    else if (flag.mode == DECODE_NO) {
+        TextDecodeNaiveImplementation(&coder);
     }
     // TODO: move to main
     printf("Compression coeff is %lf, length was %d, compressed length is %d \n",
-          (float) coder.initial_length / coder.compressed_length,
-          coder.initial_length, coder.compressed_length);
+          (float) coder.stats.initial_length / coder.stats.compressed_length,
+           coder.stats.initial_length, coder.stats.compressed_length);
 
     fclose(file_input);
     fclose(file_output);

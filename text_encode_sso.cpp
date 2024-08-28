@@ -1,15 +1,15 @@
-#include "text_encode.h"
+#include "text_encode_sso.h"
 
-static int ArrayCopy(FILE *input, int symbol, int* symbol_amount, int unrepeatable_symbols[], compression_stats_t* coder);
+static int ArrayCopy(text_coder_t* coder, int symbol, int* symbol_amount, int unrepeatable_symbols[]);
 
 
-errors_t TextEncode(text_encode_t* encoder) {
+errors_t TextEncodeSSO(text_coder_t* coder) {
 
-    assert(file_input != NULL);
-    assert(file_input != NULL);
+    assert(coder->file_input != nullptr);
+    assert(coder->file_output != nullptr);
 
-    int symbol      = fgetc(file_input);
-    int next_symbol = fgetc(file_input);
+    int symbol      = fgetc(coder->file_input);
+    int next_symbol = fgetc(coder->file_input);
 
     if (symbol == EOF) {
         return EMPTY_FILE_ERROR;
@@ -20,37 +20,37 @@ errors_t TextEncode(text_encode_t* encoder) {
 
         while (next_symbol == symbol &&
                next_symbol != EOF &&
-               symbol_amount < MAX_LEN_SYMBOLS) {
+               symbol_amount < MAX_LEN_SYMBOLS_SSO) {
             symbol_amount++;
-            next_symbol = fgetc(file_input);
-            coder->initial_length++;
+            next_symbol = fgetc(coder->file_input);
+            coder->stats.initial_length++;
         }
 
         if (symbol_amount == 0) {
-            int unrepeatable_symbols[MAX_LEN_SYMBOLS] = {};
+            int unrepeatable_symbols[MAX_LEN_SYMBOLS_SSO] = {};
             unrepeatable_symbols[0] = symbol;
 
-            symbol = ArrayCopy(file_input, next_symbol, &symbol_amount, unrepeatable_symbols, coder);
+            symbol = ArrayCopy(coder, next_symbol, &symbol_amount, unrepeatable_symbols);
             next_symbol = symbol;
 
-            fputc(symbol_amount | ARRAY_COPY_MASK, file_output);
+            fputc(symbol_amount | ARRAY_COPY_MASK, coder->file_output);
 
             for (int i = 0; i < symbol_amount + 1; i++) {
-                fputc(unrepeatable_symbols[i], file_output);
+                fputc(unrepeatable_symbols[i], coder->file_output);
             }
 
-            coder->compressed_length += symbol_amount + 2;
+            coder->stats.compressed_length += symbol_amount + 2;
         }
         else {
-            fputc(symbol_amount, file_output);
-            fputc(symbol, file_output);
+            fputc(symbol_amount, coder->file_output);
+            fputc(symbol, coder->file_output);
 
-            coder->compressed_length += 2;
+            coder->stats.compressed_length += 2;
 
             symbol = next_symbol;
-            next_symbol = fgetc(file_input);
+            next_symbol = fgetc(coder->file_input);
 
-            coder->initial_length++;
+            coder->stats.initial_length++;
         }
 
         if (next_symbol == EOF) {
@@ -65,12 +65,12 @@ errors_t TextEncode(text_encode_t* encoder) {
 }
 
 // TODO: нахуя копировать структуру и держать там указателиб хранитьь переменную в структуре и передавать указатель на структуру
-int ArrayCopy(FILE *input, int symbol, int* symbol_amount, int unrepeatable_symbols[], compression_stats_t* coder) { //
+int ArrayCopy(text_coder_t* coder, int symbol, int* symbol_amount, int unrepeatable_symbols[]) { //
     int next_symbol = EOF;
 
     while (true) {
-        next_symbol = getc(input);
-        (coder->initial_length)++;
+        next_symbol = getc(coder->file_input);
+        (coder->stats.initial_length)++;
 
         if (symbol == next_symbol || symbol == EOF) {
             break;
