@@ -9,11 +9,11 @@ static void SetOutputFile(flags_t* flags, const char* arg);
 static void PrintHelp(flags_t* flags, const char* arg);
 
 // TODO: static
-static const commands_t commands[] = {
+static const commands_t commands[] = { // ХУЙНЯ ПЕРЕДЕЛЫВАЙ: -e -d отдельно -sso -ni отдельно после них
     {"-esso", "--encode_sso",   "encode text by small sequence optimization", &SetEncodeSSOMode, 0},
-    { "-eno",  "--encode_no",            "encode text by naive optimization",  &SetEncodeNOMode, 0},
+    { "-eni",  "--encode_ni",          "encode text by naive implementation",  &SetEncodeNOMode, 0},
     {"-dsso", "--decode_sso", "decode text from small sequence optimization", &SetDecodeSSOMode, 0},
-    { "-dno",  "--decode_no",          "decode text from naive optimization",  &SetDecodeNOMode, 0},
+    { "-dni",  "--decode_ni",        "decode text from naive implementation",  &SetDecodeNOMode, 0},
     {   "-i",      "--input",                               "set input file",     &SetInputFile, 1},
     {   "-o",     "--output",                              "set output file",    &SetOutputFile, 1},
     {   "-h",       "--help",                   "print commands description",        &PrintHelp, 0}
