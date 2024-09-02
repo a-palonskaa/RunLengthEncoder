@@ -28,7 +28,7 @@ errors_t TextEncodeNaiveImplementation(text_coder_t* coder) {
         fputc(symbol_amount, coder->file_output);
         fputc(symbol, coder->file_output);
 
-        coder->stats.compressed_length += 2;
+        coder->stats.encoded_length += 2;
 
         symbol = next_symbol;
     }

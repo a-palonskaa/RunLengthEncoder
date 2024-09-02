@@ -1,7 +1,5 @@
 #include "text_decode_sso.h"
 
-// TODO: структура decoder
-//compression_stats
 errors_t TextDecodeSSO(text_coder_t* coder) {
 
     assert(coder != NULL);
@@ -21,8 +19,8 @@ errors_t TextDecodeSSO(text_coder_t* coder) {
                 fputc(coping_symbol, coder->file_output);
             }
 
-            coder->stats.initial_length += amount + 1; // TODO: вынести из цикла
-            coder->stats.compressed_length++;
+            coder->stats.initial_length += amount + 1;
+            coder->stats.encoded_length++;
         }
         else {
             for (int i = 0; i < amount + 1; i++) {
@@ -30,12 +28,12 @@ errors_t TextDecodeSSO(text_coder_t* coder) {
                 fputc(coping_symbol, coder->file_output);
             }
 
-            coder->stats.initial_length    += amount + 1; // TODO: вынести из цикла
-            coder->stats.compressed_length += amount + 1; // TODO: вынести из цикла
+            coder->stats.initial_length    += amount + 1;
+            coder->stats.encoded_length += amount + 1;
         }
 
         encoding_length = fgetc(coder->file_input);
-        coder->stats.compressed_length++;
+        coder->stats.encoded_length++;
     }
 
     return NO_ERRORS;
@@ -45,6 +43,4 @@ compression_mode_t DeterminePrintMode(int number, int *amount) {
     *amount = number & LENGHT_MASK;
 
     return (number == (number & LENGHT_MASK)) ? COPY_SYMBOL : COPY_ARRAY;
-    // TODO: через тернарный оператор
-
 }

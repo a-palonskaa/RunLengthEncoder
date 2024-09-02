@@ -4,9 +4,10 @@
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
+#include <assert.h>
 
 #include "define_constants.h"
 
-int TextEncodeBase85(FILE* file_in, FILE* file_out);
+int TextEncodeBase85(text_coder_t* coder);
 
 #endif /* TEXT_ENCODE_BASE85_H */

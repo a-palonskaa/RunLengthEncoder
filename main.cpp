@@ -2,25 +2,23 @@
 #include <ctype.h>
 #include <string.h>
 
+#include "arg_parser.h"
 #include "text_encode_sso.h"
 #include "text_decode_sso.h"
-#include "arg_parser.h"
 #include "text_decode_naive_implementation.h"
 #include "text_encode_naive_implementation.h"
+#include "text_encode_base85.h"
+#include "text_decode_base85.h"
 
-// TODO: where const
 int main(int argc, const char* argv[]) {
 
     flags_t flag = {};
 
-    // TODO: rename
     InitializeFlags(&flag);
 
-    // TODO: no initialization
     FILE* file_input  = nullptr;
     FILE* file_output = nullptr;
 
-    // TODO: whar error
     if (ArgParser(argc, argv, &flag) == COMMAND_INPUT_ERROR) {
         return COMMAND_INPUT_ERROR;
     }
@@ -34,32 +32,43 @@ int main(int argc, const char* argv[]) {
         perror("OUTPUT FILE OPENING ERROR");
         return FILE_OPEN_ERROR;
     }
-//text_encode_t* encoder
+
     text_coder_t coder = {};
 
     coder.file_input  = file_input;
     coder.file_output = file_output;
 
-    if (flag.mode == DECODE_SSO) {
-        TextDecodeSSO(&coder);
+    if (flag.mode == DECODE) {
+
+        if (flag.method == SSO_METHOD) {
+            TextDecodeSSO(&coder);
+        }
+        else if (flag.method == NI_METHOD) {
+            TextDecodeNaiveImplementation(&coder);
+        }
+        else if (flag.method == B85_METHOD) {
+            TextDecodeBase85(&coder);
+        }
     }
-    else if (flag.mode == ENCODE_SSO) {
-        TextEncodeSSO(&coder);
+    else if (flag.mode == ENCODE) {
+
+        if (flag.method == SSO_METHOD) {
+            TextEncodeSSO(&coder);
+        }
+        else if (flag.method == NI_METHOD) {
+            TextEncodeNaiveImplementation(&coder);
+        }
+        else if (flag.method == B85_METHOD) {
+            TextEncodeBase85(&coder);
+        }
     }
-    else if (flag.mode == ENCODE_NO) {
-        TextEncodeNaiveImplementation(&coder);
-    }
-    else if (flag.mode == DECODE_NO) {
-        TextDecodeNaiveImplementation(&coder);
-    }
-    // TODO: move to main
-    printf("Compression coeff is %lf, length was %d, compressed length is %d \n",
-          (float) coder.stats.initial_length / coder.stats.compressed_length,
-           coder.stats.initial_length, coder.stats.compressed_length);
+
+    printf("Compression coefficient is %.2lf, length was %d, encoded length is %d \n",
+          (float) coder.stats.initial_length / coder.stats.encoded_length,
+           coder.stats.initial_length, coder.stats.encoded_length);
 
     fclose(file_input);
     fclose(file_output);
 
-    // TODO: почему 1
     return NO_ERRORS;
 }

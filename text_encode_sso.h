@@ -9,4 +9,3 @@
 errors_t TextEncodeSSO(text_coder_t* encoder);
 
 #endif /* TEXT_ENCODE_SSO_H */
-// TODO: добавить первую версию в этот файл

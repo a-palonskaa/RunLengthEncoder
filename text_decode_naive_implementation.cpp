@@ -10,7 +10,7 @@ errors_t TextDecodeNaiveImplementation(text_coder_t* coder) {
     int coping_symbol = EOF;
 
     while ((amount = fgetc(coder->file_input))!= EOF && (coping_symbol = fgetc(coder->file_input)) != EOF) {
-        coder->stats.compressed_length += 2;
+        coder->stats.encoded_length += 2;
         for (int i = 0; i < amount + 1; i++) {
             fputc(coping_symbol, coder->file_output);
             coder->stats.initial_length++;

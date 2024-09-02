@@ -39,13 +39,13 @@ errors_t TextEncodeSSO(text_coder_t* coder) {
                 fputc(unrepeatable_symbols[i], coder->file_output);
             }
 
-            coder->stats.compressed_length += symbol_amount + 2;
+            coder->stats.encoded_length += symbol_amount + 2;
         }
         else {
             fputc(symbol_amount, coder->file_output);
             fputc(symbol, coder->file_output);
 
-            coder->stats.compressed_length += 2;
+            coder->stats.encoded_length += 2;
 
             symbol = next_symbol;
             next_symbol = fgetc(coder->file_input);
@@ -58,14 +58,10 @@ errors_t TextEncodeSSO(text_coder_t* coder) {
         }
     }
 
-    // TODO: перенести в main
-    // NOTE : достаточно изменить только один тип, т.к. все приводиться к сильнейшему типу в выражении
-
     return NO_ERRORS;
 }
 
-// TODO: нахуя копировать структуру и держать там указателиб хранитьь переменную в структуре и передавать указатель на структуру
-int ArrayCopy(text_coder_t* coder, int symbol, int* symbol_amount, int unrepeatable_symbols[]) { //
+int ArrayCopy(text_coder_t* coder, int symbol, int* symbol_amount, int unrepeatable_symbols[]) {
     int next_symbol = EOF;
 
     while (true) {
