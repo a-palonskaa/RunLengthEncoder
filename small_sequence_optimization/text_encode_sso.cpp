@@ -1,4 +1,5 @@
 #include "text_encode_sso.h"
+#include "sso_constants.h"
 
 static int ArrayCopy(text_coder_t* coder, int symbol, int* symbol_amount, int unrepeatable_symbols[]);
 

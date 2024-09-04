@@ -7,6 +7,6 @@
 
 errors_t TextDecodeBase85(text_coder_t* coder);
 
-int Power(int base, int power);
+unsigned int Power(unsigned int base, unsigned int power);
 
 #endif /* TEXT_DECODE_BASE85_H */

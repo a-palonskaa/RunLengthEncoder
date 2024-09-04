@@ -1,6 +1,7 @@
 #include <assert.h>
 
 #include "text_encode_base85.h"
+#include "base85_constants.h"
 
 static int FourBytesToInt(const int* bytes4);
 static int IntToFiveBytes(int bytes4, int* bytes5);
@@ -10,7 +11,7 @@ errors_t TextEncodeBase85(text_coder_t* coder) {
     assert(coder->stats.encoded_length == 0);
     assert(coder->stats.initial_length == 0);
 
-    STATICS_ASSERT(BYTES5_CNT == 5, WRONG_AMOUNT_OF_BYTES_FOR_BASE85); // ХУЙНЯ ПЕРЕДЕЛЫВАЙ: add own static_assert
+    STATICS_ASSERT(BYTES5_CNT == 5, WRONG_AMOUNT_OF_BYTES_FOR_BASE85);
     STATICS_ASSERT(BYTES4_CNT == 4, WRONG_AMOUNT_OF_BYTES_FOR_BASE85);
 
     bool flag = true;

@@ -5,20 +5,9 @@
 
 // ХУЙНЯ ПЕРЕДЕЛЫВАЙ: это не константы main
 
-#define STATICS_ASSERT(COND,MSG) typedef char static_assertion_##MSG[(COND)?1:-1]//REVIEW -
+#define STATICS_ASSERT(COND,MSG) typedef char static_assertion_##MSG[(COND)?1:-1] //REVIEW -
 
-const int Z_ASCII_CODE = 'z';
-const int U_ASCII_CODE = 'u';
-const int BYTES5_CNT = 5;
-const int BYTES4_CNT = 4;
-
-const int MAX_LEN_SYMBOLS_SSO = 127;
 const int MAX_LEN_NAME        = 100;
-const int MAX_LEN_SYMBOLS_NO  = 255;
-
-const int LENGHT_MASK = 0x7F;
-
-const int ARRAY_COPY_MASK = 0x80;
 
 typedef enum {
     NO_ERRORS           = 0,

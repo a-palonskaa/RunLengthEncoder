@@ -1,4 +1,5 @@
 #include "text_decode_sso.h"
+#include "sso_constants.h"
 
 errors_t TextDecodeSSO(text_coder_t* coder) {
 

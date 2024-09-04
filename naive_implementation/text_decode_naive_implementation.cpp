@@ -1,4 +1,5 @@
 #include "text_decode_naive_implementation.h"
+#include "ni_constants.h"
 
 errors_t TextDecodeNaiveImplementation(text_coder_t* coder) {
 
