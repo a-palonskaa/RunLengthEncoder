@@ -28,7 +28,7 @@ errors_t TextDecodeSSO(text_coder_t* coder) {
                 fputc(coping_symbol, coder->file_output);
             }
 
-            coder->stats.initial_length    += amount + 1;
+            coder->stats.initial_length += amount + 1;
             coder->stats.encoded_length += amount + 1;
         }
 
@@ -42,5 +42,6 @@ errors_t TextDecodeSSO(text_coder_t* coder) {
 compression_mode_t DeterminePrintMode(int number, int *amount) {
     *amount = number & LENGHT_MASK;
 
-    return (number == (number & LENGHT_MASK)) ? COPY_SYMBOL : COPY_ARRAY;
+    // ХУЙНЯ ПЕРЕДЕЛЫВАЙ: why not array_copy_mask??????????
+    return (number == *amount) ? COPY_SYMBOL : COPY_ARRAY;
 }

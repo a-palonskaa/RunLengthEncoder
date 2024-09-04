@@ -61,6 +61,8 @@ errors_t TextEncodeSSO(text_coder_t* coder) {
     return NO_ERRORS;
 }
 
+// ХУЙНЯ ПЕРЕДЕЛЫВАЙ: reorder arguments
+// ХУЙНЯ ПЕРЕДЕЛЫВАЙ: опять, неочевидное возвращаемое значение
 int ArrayCopy(text_coder_t* coder, int symbol, int* symbol_amount, int unrepeatable_symbols[]) {
     int next_symbol = EOF;
 

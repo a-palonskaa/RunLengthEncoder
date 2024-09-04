@@ -1,81 +1,101 @@
+#include <assert.h>
+
 #include "text_decode_base85.h"
 
+// ХУЙНЯ ПЕРЕДЕЛЫВАЙ: << 3
+#define BYTES4_MASK(i) (8 * (3 - (i)))
+
 static int FiveBytesToInt(int* bytes5);
-void IntToFourBytes(int bytes5_to_int, int* bytes4);
-int Power(int base, int power);
+static void IntToFourBytes(int bytes5_to_int, int* bytes4);
 
-const int char_masks[] = {0xFF000000, 0xFF0000, 0xFF00, 0xFF};
+const int CHAR_MASKS[] = {
+    0xFF000000,
+    0x00FF0000,
+    0x0000FF00,
+    0x000000FF
+};
 
-int TextDecodeBase85(text_coder_t* coder) {
+errors_t TextDecodeBase85(text_coder_t* coder) {
     assert(coder != nullptr);
     assert(coder->stats.encoded_length == 0);
     assert(coder->stats.initial_length == 0);
 
+    STATICS_ASSERT(BYTES5_CNT == 5, WRONG_AMOUNT_OF_BYTES_FOR_BASE85);
+    STATICS_ASSERT(BYTES4_CNT == 4, WRONG_AMOUNT_OF_BYTES_FOR_BASE85);
+
     bool flag = true;
 
     while (flag) {
-        int bytes5[5] = {};
-        int bytes4[4] = {};
+        int bytes5[BYTES5_CNT] = {}; // ХУЙНЯ ПЕРЕДЕЛЫВАЙ: подумать почему здесь должен unsigned  в принципе
+        int bytes4[BYTES4_CNT] = {};
         int i = 0;
 
-        bytes5[0] = getc(coder->file_input);
-
-        while (bytes5[i] != EOF && i < 4 && bytes5[i] != 122) {
+        while ((bytes5[i] = getc(coder->file_input)) != EOF &&
+                i < BYTES5_CNT - 1 &&
+                bytes5[i] != Z_ASCII_CODE) {
             i++;
-            bytes5[i] = getc(coder->file_input);
         }
 
         int bytes_amount = i;
 
-        if (bytes5[i] == 122) {
-            for (int i = 0; i < 5; i++) {
+        coder->stats.encoded_length += bytes_amount + 1;
+
+        if (bytes5[i] == Z_ASCII_CODE) {
+            for (int j = 0; j < BYTES5_CNT; j++) {
                 fputc(0, coder->file_output);
             }
+
+            coder->stats.initial_length += BYTES5_CNT;
         }
         else {
             if (bytes5[i] == EOF) {
-                for (int i = bytes_amount ; i < 5; i++) {
-                    printf("NULL %d  ", i);
-                    bytes5[i] = 117;
+                for (int j = bytes_amount ; j < BYTES5_CNT; j++) {
+                    bytes5[j] = U_ASCII_CODE;
                 }
 
+                coder->stats.encoded_length--;
                 bytes_amount--;
                 flag = false;
             }
 
             int bytes5_to_int = FiveBytesToInt(bytes5);
-            printf("int = %d \n", bytes5_to_int);
             IntToFourBytes(bytes5_to_int, bytes4);
 
-
-            for (int i = 0; i < bytes_amount; i++) {
-                fputc(bytes4[i], coder->file_output);
+            for (int j = 0; j < bytes_amount; j++) {
+                fputc(bytes4[j], coder->file_output);
             }
+
+            coder->stats.initial_length += bytes_amount;
         }
     }
-    return 0;
+    return NO_ERRORS;
 }
 
 int FiveBytesToInt(int* bytes5) {
+    assert(bytes5 != nullptr);
+
     int value = 0;
+    int power85_bytes5_cnt = Power(85, 4);
 
-    for (int i = 0; i < 5; i++) {
-        printf("bytes[%d] = %d \n", i, bytes5[i]);
-        printf("%d \n", (bytes5[i] - 33) * Power(85, (4 - i)));
-        value += (bytes5[i] - 33) * Power(85, (4 - i));
+    for (int i = 0; i < BYTES5_CNT; i++) {
+        value += (bytes5[i] - 33) * power85_bytes5_cnt;
+        power85_bytes5_cnt /= 85;
+
     }
-
     return value;
 }
 
-void IntToFourBytes(int bytes5_to_int, int* bytes4) {
-    for (int i = 0; i < 4; i++) {
-        bytes4[i] = (bytes5_to_int & char_masks[i]) >> (8 * (3 - i));
+static void IntToFourBytes(int bytes5_to_int, int* bytes4) {
+    assert(bytes4 != nullptr);
+
+    for (int i = 0; i < BYTES4_CNT; i++) {
+        bytes4[i] = (bytes5_to_int & CHAR_MASKS[i]) >> BYTES4_MASK(i); //ХУЙНЯ ПЕРЕДЕЛЫВАЙ -
     }
 }
 
 int Power(int base, int power) {
     int result = 1;
+
     for (int i = 0; i < power; i++) {
         result *= base;
     }

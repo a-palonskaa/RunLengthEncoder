@@ -13,7 +13,7 @@ errors_t TextDecodeNaiveImplementation(text_coder_t* coder) {
         coder->stats.encoded_length += 2;
         for (int i = 0; i < amount + 1; i++) {
             fputc(coping_symbol, coder->file_output);
-            coder->stats.initial_length++;
+            coder->stats.initial_length++; // ХУЙНЯ ПЕРЕДЕЛЫВАЙ: нести из под цикла
         }
     }
 

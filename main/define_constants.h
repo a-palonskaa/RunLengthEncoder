@@ -3,16 +3,21 @@
 
 #include <stdio.h>
 
-const int MAX_LEN_SYMBOLS_SSO  = 127;
-const int MAX_LEN_NAME = 100;
-const int MAX_LEN_SYMBOLS_NO = 255;
+// ХУЙНЯ ПЕРЕДЕЛЫВАЙ: это не константы main
 
-// 0b0111'1111
-// 0x   7    F
+#define STATICS_ASSERT(COND,MSG) typedef char static_assertion_##MSG[(COND)?1:-1]//REVIEW -
+
+const int Z_ASCII_CODE = 'z';
+const int U_ASCII_CODE = 'u';
+const int BYTES5_CNT = 5;
+const int BYTES4_CNT = 4;
+
+const int MAX_LEN_SYMBOLS_SSO = 127;
+const int MAX_LEN_NAME        = 100;
+const int MAX_LEN_SYMBOLS_NO  = 255;
+
 const int LENGHT_MASK = 0x7F;
 
-// 0b1000'0000
-// 0x   8    0
 const int ARRAY_COPY_MASK = 0x80;
 
 typedef enum {

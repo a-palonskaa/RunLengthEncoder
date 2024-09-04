@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -c -Wall -std=c++17 -Wall -Wextra -Weffc++ -Wc++14-compat -Wmissing-declarations           \
+CFLAGS = -c -Wall -D _DEBUG  -std=c++17 -Wall -Wextra -Weffc++ -Wc++14-compat -Wmissing-declarations   \
 					-Wcast-align -Wcast-qual -Wchar-subscripts -Wconversion -Wctor-dtor-privacy     \
 					-Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat=2     \
 					-Winline -Wnon-virtual-dtor -Woverloaded-virtual -Wpacked -Wpointer-arith       \
@@ -18,6 +18,8 @@ SSO_DIR    = small_sequence_optimization
 MAIN_DIR   = main
 BUILD_DIR  = build
 
+#TODO: add recursive makefile, пример смотреть у Владимирова
+
 SOURCES_BASE85 = text_decode_base85.cpp text_encode_base85.cpp
 SOURCES_NI     = text_decode_naive_implementation.cpp text_encode_naive_implementation.cpp
 SOURCES_SSO    = text_decode_sso.cpp text_encode_sso.cpp
@@ -32,28 +34,25 @@ SOURCES =  $(SOURCES_BASE85) $(SOURCES_NI) $(SOURCES_SSO) $(SOURCES_MAIN)
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.cpp=%.o))
 DEPS 	= $(OBJECTS:.o=.d)
 
-CFLAGS += -I$(MAIN_DIR)
-CFLAGS += -I$(BASE85_DIR)
-CFLAGS += -I$(NI_DIR)
-CFLAGS += -I$(SSO_DIR)
+CFLAGS += -I$(MAIN_DIR) -I$(BASE85_DIR) -I$(NI_DIR) -I$(SSO_DIR)
 
 EXECUTABLE = $(BUILD_DIR)/run
 
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $^ -o $@
+	@$(CC) $(LDFLAGS) $^ -o $@
 
 $(OBJECTS): $(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(DEPS): $(BUILD_DIR)/%.d: %.cpp
 	@mkdir -p $(@D)
-	$(CC) -E $(CFLAGS) $< -MM -MT $(@:.d=.o) > $@
+	@$(CC) -E $(CFLAGS) $< -MM -MT $(@:.d=.o) > $@
 
 clean:
-	rm -f $(EXECUTABLE) $(OBJECTS)
+	rm -f $(EXECUTABLE) $(OBJECTS) $(DEPS)
 
 NODEPS = clean
 

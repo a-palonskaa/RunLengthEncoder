@@ -38,7 +38,7 @@ typedef struct {
     bool argument;
 } commands_t;
 
-errors_t ArgParser(int argc, const char* argv[], flags_t* flags);
+errors_t ArgParser(int argc, char* argv[], flags_t* flags);
 void InitializeFlags(flags_t* flag);
 
 #endif /* ARG_PARSER_H */

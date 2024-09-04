@@ -10,7 +10,7 @@
 #include "text_encode_base85.h"
 #include "text_decode_base85.h"
 
-int main(int argc, const char* argv[]) {
+int main(int argc, char* argv[]) {
 
     flags_t flag = {};
 

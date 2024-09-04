@@ -2,11 +2,11 @@
 #define TEXT_DECODE_BASE85_H
 
 #include <stdio.h>
-#include <math.h>
-#include <assert.h>
 
 #include "define_constants.h"
 
-int TextDecodeBase85(text_coder_t* coder);
+errors_t TextDecodeBase85(text_coder_t* coder);
+
+int Power(int base, int power);
 
 #endif /* TEXT_DECODE_BASE85_H */
